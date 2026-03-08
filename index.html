@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ZDEH inside the shell</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+
+  <!-- xterm.js v5.3.0 via CDN -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.min.css" />
+
+  <!-- Game styles -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════ SPLASH SCREEN ══════════════════════════════ -->
+  <div id="splash-screen" class="screen">
+    <div class="splash-title">
+      ZDEH<br />
+      <span style="font-size:0.6em; color:#aaffcc">inside the shell</span>
+    </div>
+    <p class="splash-sub">
+      You are an Apprentice Archivist.<br />
+      Master Linux commands to navigate the Root Library.<br />
+      Beware of Madam Sudo.
+    </p>
+    <button id="start-btn" class="btn-primary">▶ ENTER THE LIBRARY</button>
+  </div>
+
+  <!-- ═══════════════════════════ GAME SCREEN ════════════════════════════════ -->
+  <div id="game-screen" class="screen hidden">
+
+    <!-- HUD -->
+    <div id="hud">
+      <span id="hud-level-name">Level 1</span>
+
+      <div class="hud-section">
+        <span class="hud-label">HP</span>
+        <div id="hp-bar"><div id="hp-fill"></div></div>
+      </div>
+
+      <div class="hud-section">
+        <span class="hud-label">Strikes</span>
+        <div id="strike-dot-1" class="strike-dot"></div>
+        <div id="strike-dot-2" class="strike-dot"></div>
+        <div id="strike-dot-3" class="strike-dot"></div>
+      </div>
+
+      <div class="hud-section">
+        <span class="hud-label">Flags</span>
+        <span id="flag-count">0</span>
+        <span style="color:#ffd700">⚑</span>
+      </div>
+    </div>
+
+    <!-- Scene -->
+    <div id="scene-area">
+      <canvas id="scene-canvas"></canvas>
+      <div id="sudo-bubble"></div>
+    </div>
+
+    <!-- Terminal -->
+    <div id="terminal-panel">
+      <div id="terminal"></div>
+    </div>
+
+  </div><!-- end game-screen -->
+
+  <!-- ═══════════════════════════ OVERLAYS ═══════════════════════════════════ -->
+
+  <!-- Flag Found Overlay -->
+  <div id="flag-overlay" class="overlay hidden">
+    <div class="overlay-box">
+      <div class="flag-title">🚩 FLAG CAPTURED! 🚩</div>
+      <p class="flag-subtitle">The book reveals its secrets, Apprentice.</p>
+      <div class="flag-value" id="flag-text">ZDEH{...}</div>
+      <p class="flag-subtitle">A new chapter of knowledge opens before you.</p>
+      <button id="flag-next-btn" class="btn-primary">NEXT LEVEL →</button>
+    </div>
+  </div>
+
+  <!-- Dungeon Overlay -->
+  <div id="dungeon-overlay" class="overlay hidden">
+    <div class="overlay-box">
+      <div id="dungeon-title">🔮 Dungeon of Man Pages 🔮</div>
+      <p style="font-size:11px;color:#cc88ff;margin-bottom:16px">
+        Answer correctly to escape Madam Sudo's dungeon.
+      </p>
+      <div id="quiz-container"></div>
+    </div>
+  </div>
+
+  <!-- Game Over Overlay -->
+  <div id="gameover-overlay" class="overlay hidden">
+    <div class="overlay-box">
+      <h2>💀 EXPELLED 💀</h2>
+      <p>Madam Sudo has expelled you from the Root Library.<br />Your HP has been depleted.</p>
+      <button id="restart-btn" class="btn-primary">TRY AGAIN</button>
+    </div>
+  </div>
+
+  <!-- Victory Overlay -->
+  <div id="victory-overlay" class="overlay hidden">
+    <div class="overlay-box">
+      <h2>🏆 MASTER ARCHIVIST 🏆</h2>
+      <p>You have conquered all 10 levels of the Root Library!<br />
+         Madam Sudo bows in grudging respect.</p>
+      <div id="victory-flags"></div>
+      <br />
+      <button id="victory-restart-btn" class="btn-primary" onclick="location.reload()">PLAY AGAIN</button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════ SCRIPTS ════════════════════════════════════ -->
+  <!-- xterm.js -->
+  <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.min.js"></script>
+
+  <!-- Game modules (order matters) -->
+  <script src="js/gamestate.js"></script>
+  <script src="js/filesystem.js"></script>
+  <script src="js/levels.js"></script>
+  <script src="js/quiz.js"></script>
+  <script src="js/punishment.js"></script>
+  <script src="js/scene.js"></script>
+  <script src="js/commands.js"></script>
+  <script src="js/terminal.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>
