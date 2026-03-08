@@ -4,15 +4,35 @@ A browser-based educational game that gamifies learning Linux commands.
 You play as an **Apprentice Archivist** navigating the magical Root Library,
 typing real Linux commands to solve puzzles and find flags.
 
-## How to Run Locally
+## Installation & Running
+
+**Step 1 — Clone the repo**
 
 ```bash
-python3 -m http.server 8000
+git clone https://github.com/Mahdio0/zdeh.git
+cd zdeh
 ```
 
-Then open: [http://localhost:8000](http://localhost:8000)
+**Step 2 — Start a local server** (any one of these works)
 
-No backend, no npm, no build tools — runs 100% in the browser.
+```bash
+# Python 3 (recommended — comes pre-installed on macOS & Linux)
+python3 -m http.server 8000
+
+# Python 2 (fallback)
+python -m SimpleHTTPServer 8000
+
+# Node.js (if you have it)
+npx serve .
+```
+
+**Step 3 — Open in your browser**
+
+```
+http://localhost:8000
+```
+
+> No backend, no npm install, no build step — runs 100% in the browser straight after cloning.
 
 ## Game Mechanics
 
