@@ -21,13 +21,14 @@ const Levels = [
     fs: {
       type: 'dir', name: '/', permissions: 'rwxr-xr-x',
       children: {
-        'note.txt': { type: 'file', name: 'note.txt', permissions: 'rw-r--r--', content: 'Welcome, Apprentice.\nYour first flag is: ZDEH{r34d_th3_n0t3}\nLearn well — the library demands it.' },
+        'note.txt': { type: 'file', name: 'note.txt', permissions: 'rw-r--r--', content: 'Welcome, Apprentice.\nThe Lobby of the Root Library is your starting point.\nLearn your way around — use pwd, ls, and cat to explore.\nMadam Sudo is watching from the shadows.' },
         'welcome.scroll': { type: 'file', name: 'welcome.scroll', permissions: 'rw-r--r--', content: 'The Root Library holds infinite knowledge.\nNavigate wisely. Madam Sudo is watching.' },
       },
     },
-    _checkState: {},
+    _checkState: { catDone: false },
     checkComplete(cmdName, args, output) {
-      return output && output.includes('ZDEH{r34d_th3_n0t3}');
+      if (cmdName === 'cat' && args[0] === 'note.txt' && output) this._checkState.catDone = true;
+      return this._checkState.catDone;
     },
   },
 
@@ -50,13 +51,14 @@ const Levels = [
       type: 'dir', name: '/', permissions: 'rwxr-xr-x',
       children: {
         'catalog.txt': { type: 'file', name: 'catalog.txt', permissions: 'rw-r--r--', content: 'Public catalog. Nothing special here.' },
-        '.hidden_codex': { type: 'file', name: '.hidden_codex', permissions: 'rw-r--r--', content: 'Shhh... this is hidden.\nFlag: ZDEH{h1dd3n_d0ts}' },
+        '.hidden_codex': { type: 'file', name: '.hidden_codex', permissions: 'rw-r--r--', content: 'Shhh... this file is hidden — only visible with ls -a.\nYou have uncovered the secret of hidden files, Apprentice.' },
         '.secret_passage': { type: 'file', name: '.secret_passage', permissions: 'rw-r--r--', content: 'Passage leads deeper...' },
       },
     },
-    _checkState: {},
+    _checkState: { catDone: false },
     checkComplete(cmdName, args, output) {
-      return output && output.includes('ZDEH{h1dd3n_d0ts}');
+      if (cmdName === 'cat' && args[0] === '.hidden_codex' && output) this._checkState.catDone = true;
+      return this._checkState.catDone;
     },
   },
 
@@ -85,7 +87,7 @@ const Levels = [
             'restricted': {
               type: 'dir', name: 'restricted', permissions: 'rwxr-xr-x',
               children: {
-                'flag.txt': { type: 'file', name: 'flag.txt', permissions: 'rw-r--r--', content: 'ZDEH{m4st3r_0f_p4ths}' },
+                'flag.txt': { type: 'file', name: 'flag.txt', permissions: 'rw-r--r--', content: '[RESTRICTED ARCHIVE — CLEARANCE GRANTED]\nYou have successfully navigated the maze.\nPath taken: / → east_wing → restricted' },
               },
             },
             'shelf_a.txt': { type: 'file', name: 'shelf_a.txt', permissions: 'rw-r--r--', content: 'Row A — linguistics section.' },
@@ -99,9 +101,10 @@ const Levels = [
         },
       },
     },
-    _checkState: {},
+    _checkState: { catDone: false },
     checkComplete(cmdName, args, output) {
-      return output && output.includes('ZDEH{m4st3r_0f_p4ths}');
+      if (cmdName === 'cat' && args[0] === 'flag.txt' && output) this._checkState.catDone = true;
+      return this._checkState.catDone;
     },
   },
 
@@ -183,14 +186,15 @@ const Levels = [
     fs: {
       type: 'dir', name: '/', permissions: 'rwxr-xr-x',
       children: {
-        'locked_tome.txt': { type: 'file', name: 'locked_tome.txt', permissions: '--- --- ---', content: 'ZDEH{p3rm1ss10n_gr4nt3d}\nYou have unlocked the forbidden knowledge.' },
+        'locked_tome.txt': { type: 'file', name: 'locked_tome.txt', permissions: '--- --- ---', content: 'FORBIDDEN KNOWLEDGE UNLOCKED\nYou have mastered file permissions, Apprentice.\nThe Restricted Section yields its secrets to you.' },
         'notice.txt': { type: 'file', name: 'notice.txt', permissions: 'rw-r--r--', content: 'Access to locked_tome.txt requires chmod 755.' },
       },
     },
-    _checkState: { chmodDone: false },
+    _checkState: { chmodDone: false, catDone: false },
     checkComplete(cmdName, args, output) {
       if (cmdName === 'chmod') this._checkState.chmodDone = true;
-      return this._checkState.chmodDone && output && output.includes('ZDEH{p3rm1ss10n_gr4nt3d}');
+      if (cmdName === 'cat' && args[0] === 'locked_tome.txt' && output) this._checkState.catDone = true;
+      return this._checkState.chmodDone && this._checkState.catDone;
     },
   },
 
@@ -207,7 +211,7 @@ const Levels = [
     introMessages: [
       'The Endless Shelf stretches to infinity.',
       'Use \x1b[33mgrep\x1b[0m to search for patterns within files.',
-      'The flag is hidden in haystack.txt.',
+      'Find the CLASSIFIED entry hidden in haystack.txt.',
     ],
     fs: {
       type: 'dir', name: '/', permissions: 'rwxr-xr-x',
@@ -215,15 +219,17 @@ const Levels = [
         'haystack.txt': {
           type: 'file', name: 'haystack.txt', permissions: 'rw-r--r--',
           content: Array.from({ length: 30 }, (_, i) =>
-            i === 15 ? 'ZDEH{f1lt3r_th3_n01s3}' : `noise line ${i + 1} — nothing to see here, move along, apprentice`
+            i === 15 ? '[CLASSIFIED: ARCHIVE_ENTRY_LOCATED]' : `noise line ${i + 1} — nothing to see here, move along, apprentice`
           ).join('\n'),
         },
-        'hint.txt': { type: 'file', name: 'hint.txt', permissions: 'rw-r--r--', content: 'Use: grep ZDEH haystack.txt' },
+        'hint.txt': { type: 'file', name: 'hint.txt', permissions: 'rw-r--r--', content: 'Use: grep CLASSIFIED haystack.txt' },
       },
     },
-    _checkState: {},
+    _checkState: { grepDone: false },
     checkComplete(cmdName, args, output) {
-      return output && output.includes('ZDEH{f1lt3r_th3_n01s3}');
+      // Complete when grep is run with haystack.txt as the file argument and finds a match
+      if (cmdName === 'grep' && args[args.length - 1] === 'haystack.txt' && output) this._checkState.grepDone = true;
+      return this._checkState.grepDone;
     },
   },
 
@@ -248,14 +254,15 @@ const Levels = [
         'junk1.txt': { type: 'file', name: 'junk1.txt', permissions: 'rw-r--r--', content: 'DISCARD' },
         'junk2.txt': { type: 'file', name: 'junk2.txt', permissions: 'rw-r--r--', content: 'DISCARD' },
         'empty_dir': { type: 'dir', name: 'empty_dir', permissions: 'rwxr-xr-x', children: {} },
-        'flag.txt': { type: 'file', name: 'flag.txt', permissions: 'rw-r--r--', content: 'ZDEH{c0up_d3_gr4c3}\nClean work, Apprentice.' },
+        'flag.txt': { type: 'file', name: 'flag.txt', permissions: 'rw-r--r--', content: '[ARCHIVE RECOVERED]\nThe disposal chute has been cleared. Clean work, Apprentice.' },
       },
     },
-    _checkState: { rmDone: false, rmdirDone: false },
+    _checkState: { rmDone: false, rmdirDone: false, catDone: false },
     checkComplete(cmdName, args, output) {
       if (cmdName === 'rm') this._checkState.rmDone = true;
       if (cmdName === 'rmdir') this._checkState.rmdirDone = true;
-      return this._checkState.rmDone && this._checkState.rmdirDone && output && output.includes('ZDEH{c0up_d3_gr4c3}');
+      if (cmdName === 'cat' && args[0] === 'flag.txt' && output) this._checkState.catDone = true;
+      return this._checkState.rmDone && this._checkState.rmdirDone && this._checkState.catDone;
     },
   },
 
@@ -280,7 +287,7 @@ const Levels = [
         'shadow': {
           type: 'dir', name: 'shadow', permissions: 'rwxr-xr-x',
           children: {
-            'secret.tome': { type: 'file', name: 'secret.tome', permissions: 'rw-r--r--', content: 'ZDEH{l1nk3d_l0c4t0r}\nYou found the hidden tome and linked it.' },
+            'secret.tome': { type: 'file', name: 'secret.tome', permissions: 'rw-r--r--', content: '[SHADOW TOME ACCESSED]\nYou found the hidden tome and linked it through the Shadow Library.\nThe symbolic link bridges the void.' },
             'decoy.txt': { type: 'file', name: 'decoy.txt', permissions: 'rw-r--r--', content: 'Not the flag. Keep searching.' },
           },
         },
@@ -292,11 +299,13 @@ const Levels = [
         },
       },
     },
-    _checkState: { found: false, linked: false },
+    _checkState: { found: false, linked: false, catDone: false },
     checkComplete(cmdName, args, output) {
       if (cmdName === 'find') this._checkState.found = true;
       if (cmdName === 'ln') this._checkState.linked = true;
-      return output && output.includes('ZDEH{l1nk3d_l0c4t0r}');
+      // Complete when the linked file (link.txt) or the tome itself is read after linking
+      if (cmdName === 'cat' && this._checkState.linked && output) this._checkState.catDone = true;
+      return this._checkState.found && this._checkState.linked && this._checkState.catDone;
     },
   },
 
@@ -319,13 +328,17 @@ const Levels = [
     fs: {
       type: 'dir', name: '/', permissions: 'rwxr-xr-x',
       children: {
-        'root_tome.txt': { type: 'file', name: 'root_tome.txt', permissions: 'rw-------', content: 'ZDEH{r00t_4rch1v1st}\nCongratulations, Master Archivist.\nYou have mastered the Root Library.' },
+        'root_tome.txt': { type: 'file', name: 'root_tome.txt', permissions: 'rw-------', content: '[ROOT TOME — CLASSIFIED]\nROOT ACCESS GRANTED.\nCongratulations, Master Archivist.\nYou have proven mastery of all library commands.\nThe Root Cellar yields its final secret.' },
         'warning.txt': { type: 'file', name: 'warning.txt', permissions: 'rw-r--r--', content: 'WARNING: root_tome.txt requires root access.\nUse: sudo cat root_tome.txt' },
       },
     },
-    _checkState: {},
+    _checkState: { sudoCatDone: false },
     checkComplete(cmdName, args, output) {
-      return output && output.includes('ZDEH{r00t_4rch1v1st}');
+      // args[0]='cat', args[1]='root_tome.txt' when called from sudo handler
+      if (cmdName === 'sudo' && args[0] === 'cat' && args[1] === 'root_tome.txt' && output) {
+        this._checkState.sudoCatDone = true;
+      }
+      return this._checkState.sudoCatDone;
     },
   },
 ];

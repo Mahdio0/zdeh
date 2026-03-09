@@ -16,15 +16,31 @@ const CommandParser = (function () {
   // ── flag overlay ──────────────────────────────────────────────────────────
   function showFlagOverlay(flag) {
     GameState.captureFlag(flag);
+    // Mark overlay as visible immediately to block duplicate triggers
+    GameState.flagOverlayVisible = true;
     // Step 1: trigger book animation on canvas
     SceneRenderer.triggerFlagBookAnimation(flag, () => {
-      // Step 2: after book animation (~2s), show DOM overlay
+      // Step 2: after book animation (~2s), write flag to terminal and open submission overlay
+      TerminalManager.writeLine('\x1b[33m' + '═'.repeat(40) + '\x1b[0m');
+      TerminalManager.writeLine('\x1b[33m🚩 MISSION COMPLETE — FLAG REVEALED:\x1b[0m');
+      TerminalManager.writeLine('\x1b[32m' + flag + '\x1b[0m');
+      TerminalManager.writeLine('\x1b[33m' + '═'.repeat(40) + '\x1b[0m');
+      TerminalManager.writeLine('\x1b[90mSubmit the flag in the overlay to advance.\x1b[0m');
+
       const overlay = document.getElementById('flag-overlay');
       const flagText = document.getElementById('flag-text');
+      const flagInput = document.getElementById('flag-input');
+      const flagError = document.getElementById('flag-error');
+      const flagNextBtn = document.getElementById('flag-next-btn');
+      const flagSubmitArea = document.getElementById('flag-submit-area');
       if (overlay && flagText) {
         flagText.textContent = flag;
+        if (flagInput) flagInput.value = '';
+        if (flagError) flagError.classList.add('hidden');
+        if (flagNextBtn) flagNextBtn.classList.add('hidden');
+        if (flagSubmitArea) flagSubmitArea.classList.remove('hidden');
         overlay.classList.remove('hidden');
-        GameState.flagOverlayVisible = true;
+        if (flagInput) setTimeout(() => flagInput.focus(), 50);
       }
     });
     Punishment.updateHUD();
@@ -336,7 +352,7 @@ const CommandParser = (function () {
     }
 
     // check level completion
-    if (GameState.currentLevel) {
+    if (GameState.currentLevel && !GameState.flagOverlayVisible) {
       const lvl = GameState.currentLevel;
       if (lvl.checkComplete(cmd, args, outputText)) {
         setTimeout(() => showFlagOverlay(lvl.flag), 300);

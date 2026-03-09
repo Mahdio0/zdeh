@@ -76,11 +76,16 @@
   <!-- Flag Found Overlay -->
   <div id="flag-overlay" class="overlay hidden">
     <div class="overlay-box">
-      <div class="flag-title">🚩 FLAG CAPTURED! 🚩</div>
-      <p class="flag-subtitle">The book reveals its secrets, Apprentice.</p>
+      <div class="flag-title">🚩 FLAG REVEALED! 🚩</div>
+      <p class="flag-subtitle">Mission complete, Apprentice. The flag has been revealed in your terminal.</p>
       <div class="flag-value" id="flag-text">ZDEH{...}</div>
-      <p class="flag-subtitle">A new chapter of knowledge opens before you.</p>
-      <button id="flag-next-btn" class="btn-primary">NEXT LEVEL →</button>
+      <p class="flag-subtitle">Type the flag below to prove you captured it and advance.</p>
+      <div id="flag-submit-area" class="flag-submit-area">
+        <input type="text" id="flag-input" class="flag-input" placeholder="Enter flag: ZDEH{...}" autocomplete="off" spellcheck="false" />
+        <button id="flag-submit-btn" class="btn-primary">SUBMIT FLAG ▶</button>
+      </div>
+      <p id="flag-error" class="flag-error hidden">❌ Incorrect flag. Check the terminal and try again.</p>
+      <button id="flag-next-btn" class="btn-primary hidden">NEXT LEVEL →</button>
     </div>
   </div>
 
