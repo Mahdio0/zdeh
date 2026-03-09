@@ -2,7 +2,7 @@
 
 A browser-based educational game that gamifies learning Linux commands.
 You play as an **Apprentice Archivist** navigating the magical Root Library,
-typing real Linux commands to solve puzzles and find flags.
+typing real Linux commands to solve puzzles and find Flags.
 
 ## Installation & Running
 
