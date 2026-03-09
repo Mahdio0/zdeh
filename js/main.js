@@ -9,6 +9,10 @@
   const nextLevelBtn   = document.getElementById('next-level-btn');
   const flagOverlay    = document.getElementById('flag-overlay');
   const flagNextBtn    = document.getElementById('flag-next-btn');
+  const flagSubmitBtn  = document.getElementById('flag-submit-btn');
+  const flagInput      = document.getElementById('flag-input');
+  const flagError      = document.getElementById('flag-error');
+  const flagSubmitArea = document.getElementById('flag-submit-area');
   const gameoverOverlay = document.getElementById('gameover-overlay');
   const restartBtn     = document.getElementById('restart-btn');
   const victoryOverlay = document.getElementById('victory-overlay');
@@ -90,6 +94,31 @@
       initLevel(nextId);
       TerminalManager.showPrompt();
       TerminalManager.focus();
+    });
+  }
+
+  // ── flag submit button ────────────────────────────────────────────────────
+  function handleFlagSubmit() {
+    if (!flagInput || !GameState.currentLevel) return;
+    const submitted = flagInput.value.trim();
+    const correct = GameState.currentLevel.flag;
+    if (submitted === correct) {
+      if (flagError) flagError.classList.add('hidden');
+      if (flagSubmitArea) flagSubmitArea.classList.add('hidden');
+      if (flagNextBtn) flagNextBtn.classList.remove('hidden');
+    } else {
+      if (flagError) flagError.classList.remove('hidden');
+      if (flagInput) { flagInput.value = ''; flagInput.focus(); }
+    }
+  }
+
+  if (flagSubmitBtn) {
+    flagSubmitBtn.addEventListener('click', handleFlagSubmit);
+  }
+
+  if (flagInput) {
+    flagInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') handleFlagSubmit();
     });
   }
 

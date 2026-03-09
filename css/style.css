@@ -156,8 +156,8 @@ html, body {
 /* ── Scene Canvas area ────────────────────────────────────── */
 #scene-area {
   position: relative;
-  flex-shrink: 0;
-  height: 220px;
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 
@@ -201,12 +201,15 @@ html, body {
 
 /* ── Terminal Panel ───────────────────────────────────────── */
 #terminal-panel {
-  flex: 1;
+  flex-shrink: 0;
+  height: 18vh;
+  min-height: 120px;
+  max-height: 20vh;
   display: flex;
   flex-direction: column;
-  min-height: 0;
   background: #0a0a0f;
   border-top: 2px solid #1a2a4e;
+  padding-bottom: env(safe-area-inset-bottom, 4px);
 }
 
 #terminal-panel.shake {
@@ -288,6 +291,40 @@ html, body {
   color: #aaffcc;
   margin-bottom: 28px;
   line-height: 1.6;
+}
+
+/* Flag submit area */
+.flag-submit-area {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 16px 0 8px;
+}
+
+.flag-input {
+  font-family: 'Share Tech Mono', 'Courier New', monospace;
+  font-size: clamp(11px, 1.6vw, 14px);
+  padding: 10px 14px;
+  background: #0a0a1a;
+  color: #00ff88;
+  border: 2px solid #00ff88;
+  outline: none;
+  width: 260px;
+  max-width: 100%;
+  letter-spacing: 1px;
+  transition: box-shadow 0.2s;
+}
+.flag-input:focus {
+  box-shadow: 0 0 12px rgba(0, 255, 136, 0.4);
+}
+.flag-input::placeholder { color: #336644; }
+
+.flag-error {
+  font-size: 11px;
+  color: #ff4444;
+  margin: 6px 0 0;
 }
 
 /* Dungeon overlay */
@@ -409,13 +446,14 @@ html, body {
 
 /* ── Responsive adjustments ───────────────────────────────── */
 @media (max-width: 600px) {
-  #scene-area { height: 160px; }
   .splash-title { font-size: 13px; }
   .btn-primary { font-size: 9px; padding: 10px 20px; }
   #hud { font-size: 9px; gap: 8px; }
   #hp-bar { width: 55px; }
+  #terminal-panel { height: 20vh; max-height: 20vh; }
+  .flag-input { width: 200px; }
 }
 
 @media (max-height: 500px) {
-  #scene-area { height: 120px; }
+  #terminal-panel { height: 20vh; max-height: 20vh; }
 }
